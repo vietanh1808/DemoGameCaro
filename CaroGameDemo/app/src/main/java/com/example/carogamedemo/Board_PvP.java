@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class Board_PvP extends View {
     private int m= 40,n= 40; // Khởi tạo số ô cờ
@@ -68,14 +69,11 @@ public class Board_PvP extends View {
         DisplayMetrics displayMetric = new DisplayMetrics();
         String cell_char = new String();
 
-        System.err.println("call to Chessboard onDraw");
         super.onDraw(canvas);
         // Lấy kích thước của màn hình
         System.err.println("get window size");
-
-
         ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displayMetric);
-        System.err.println("done get window size");
+
         int width = displayMetric.widthPixels;// Độ rộng màn hình
         int height = displayMetric.heightPixels;// Độ cao màn hình
 
@@ -88,13 +86,10 @@ public class Board_PvP extends View {
             grid_size = height/m;
 
         }
-        System.out.println("Tính: "+"m= "+m+"; n= "+n);
         n = width/ (width/n);
         m = height/ (grid_size) ;
-        System.out.println("Giá trị sau vẽ : "+"m= "+m+"; n= "+n+"grid_sze"+grid_size);
         grid_width = n;
         grid_height =m;
-        System.out.println("Giá trị sau vẽ : "+"grid_height= "+grid_height+"; grid_width= "+grid_width+";grid_sze"+grid_size);
 
         Paint paint = new Paint();
         paint.setStrokeWidth(2); // Độ đậm nhạt của đường kẻ và quân đánh
@@ -129,6 +124,31 @@ public class Board_PvP extends View {
                         j*grid_size+(bounds.height()+(grid_size-bounds.height())/2) , paint);
             }
         }
+//        if (arr[i][j] == empty_cell) {
+//            paint.setColor(Color.WHITE);// set màu của ô cờ trống
+//            cell_char = " ";
+//        }
+//        else if (arr[i][j] == x_cell) {
+//            paint.setColor(Color.RED);// set màu của ô cờ x
+//            cell_char = "X";
+//        }
+//        else if (arr[i][j] == o_cell) {
+//            paint.setColor(Color.BLUE);// set màu của ô cờ O
+//            cell_char = "O";
+//        }
+//        //Fill rectangle
+//        paint.setTextSize(grid_size/2);
+//        paint.setStyle(Paint.Style.FILL);
+//        canvas.drawRect(new Rect(i * grid_size, j * grid_size, (i + 1) * grid_size, (j + 1) * grid_size), paint);
+//
+//        // Border rectangle
+//        paint.setStyle(Paint.Style.STROKE);
+//        paint.setColor(Color.BLACK);
+//        canvas.drawRect(new Rect(i * grid_size, j * grid_size, (i + 1) * grid_size, (j + 1) * grid_size), paint);
+//        Rect bounds= new Rect();
+//        paint.getTextBounds("X", 0, 1, bounds);
+//        canvas.drawText(cell_char,0,1, i*grid_size + (grid_size-bounds.width())/2 ,
+//                j*grid_size+(bounds.height()+(grid_size-bounds.height())/2) , paint);
     }
 
     // Đi 1 nước
@@ -179,7 +199,8 @@ public class Board_PvP extends View {
                 System.out.println("Action outside");
                 break;
         }
-        this.invalidate();// Hàm này để vẽ lại quân cờ đã chọn
+//        this.invalidate();// Hàm này để vẽ lại quân cờ đã chọn
+        this.postInvalidate();
         return super.onTouchEvent(event);
     }
 
@@ -237,9 +258,7 @@ public class Board_PvP extends View {
         }
     }
     private void alert_winner() {
-        remove_cell();
-        this.invalidate();
-        
+//        this.invalidate();
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Cờ caro");
@@ -271,16 +290,21 @@ public class Board_PvP extends View {
                 newbuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(), "Yes", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
                     }
                 });
                 newbuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getContext(), "No", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
                     }
                 });
                 newbuilder.create().show();
             }
         });
         builder.create().show();
+//        remove_cell();
     }
     private void check_empty_cell() {
         if (this.arr[(int) mX / grid_size][(int) mY / grid_size] == empty_cell) {
