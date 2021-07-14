@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Time Setting">
+        <menu>
+            <item android:title="15s"
+                android:id="@+id/time_15s"/>
+            <item android:title="30s"
+                android:id="@+id/time_30s"/>
+            <item android:title="60s"
+                android:id="@+id/time_60s"/>
+            <item android:title="Infinity"
+                android:id="@+id/time_infinity"/>
+        </menu>
+    </item>
+    <item android:title="Undo"
+        android:id="@+id/pvsp_undo"/>
+    <item android:title="Redo"
+        android:id="@+id/pvsp_redo"/>
+    <item android:title="Save"
+        android:id="@+id/pvsp_save"/>
+    <item android:title="Continue"
+        android:id="@+id/pvsp_cont" />
+    <item android:title="Back"
+        android:id="@+id/pvsp_back"/>
+</menu>

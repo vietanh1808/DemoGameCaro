@@ -17,6 +17,8 @@ import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class Board_PvP extends View {
     private int m= 40,n= 40; // Khởi tạo số ô cờ
 
@@ -93,6 +95,8 @@ public class Board_PvP extends View {
 
         Paint paint = new Paint();
         paint.setStrokeWidth(2); // Độ đậm nhạt của đường kẻ và quân đánh
+        ArrayList l = new ArrayList();
+        
 
         for (int i = 0; i < grid_width; i++) {
             for (int j = 0; j < grid_height; j++) {
