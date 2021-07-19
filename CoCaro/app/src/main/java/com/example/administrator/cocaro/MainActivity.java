@@ -39,14 +39,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        replay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentPvsC = new Intent(MainActivity.this, ReplayActivity.class);
-                startActivity(intentPvsC);
-            }
-        });
-
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private void AnhXa() {
         pvsp    = (ImageButton) findViewById(R.id.pvsp);
         pvsc    = (ImageButton) findViewById(R.id.pvsc);
-        replay  = (ImageButton) findViewById(R.id.replay);
         exit    = (ImageButton) findViewById(R.id.exit);
     }
 }

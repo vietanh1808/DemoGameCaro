@@ -18,10 +18,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by Administrator on 3/3/2018.
- */
-
 public class PvsCActivity extends AppCompatActivity {
 
     GridView grid;
@@ -49,6 +45,8 @@ public class PvsCActivity extends AppCompatActivity {
                     rep.remove(rep.size()-1);
                     rep.remove(rep.size()-1);
                     adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(this, "Chưa có nước đi", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.pvsc_redo:
@@ -62,6 +60,8 @@ public class PvsCActivity extends AppCompatActivity {
                     red.remove(red.size()-1);
 
                     adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(this, "Chưa có nước lùi", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.pvsc_save:
@@ -107,7 +107,7 @@ public class PvsCActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Toast.makeText(PvsCActivity.this, "Saved", 0).show();
+                    Toast.makeText(PvsCActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
                 }
             }

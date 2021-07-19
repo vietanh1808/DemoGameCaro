@@ -15,10 +15,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-/**
- * Created by Administrator on 3/12/2018.
- */
-
 public class AdapterGridViewPvsP extends BaseAdapter{
     Context myContext;
     int myLayout;
@@ -27,6 +23,7 @@ public class AdapterGridViewPvsP extends BaseAdapter{
     Button btNewGame;
     ImageView px, po;
     int kt=0, pvsp_time;
+    int cell = 19;
 
     CountDownTimer timer1 = new CountDownTimer(15000, 1000) {
         @Override
@@ -121,8 +118,8 @@ public class AdapterGridViewPvsP extends BaseAdapter{
         final CustomTextView customTextView = view.findViewById(R.id.custom_text);
         customTextView.setBackgroundResource(R.drawable.oco);
 
-        if (arr.get(i)==1) customTextView.setBackgroundResource(R.drawable.ocox);
-        if (arr.get(i)==-1) customTextView.setBackgroundResource(R.drawable.ocoo);
+        if (arr.get(i)==1){ customTextView.setBackgroundResource(R.drawable.ocox); }
+        if (arr.get(i)==-1){ customTextView.setBackgroundResource(R.drawable.ocoo); }
         if (rep.size()>0){
             if (rep.get(rep.size()-1)==i && rep.size()%2==0) customTextView.setBackgroundResource(R.drawable.ocooo);
             if (rep.get(rep.size()-1)==i && rep.size()%2==1) customTextView.setBackgroundResource(R.drawable.ocoxx);
@@ -139,6 +136,8 @@ public class AdapterGridViewPvsP extends BaseAdapter{
                     else po_danh();
                     notifyDataSetChanged();
                 }
+                System.out.println("i = " + i);
+                System.out.println("arr = " + arr);
             }
 
             private void px_danh() {
@@ -159,66 +158,60 @@ public class AdapterGridViewPvsP extends BaseAdapter{
             }
 
             private int kthang(int i, int i1) {
-                int vthang = i/19*19, diem = 0;
-                while (vthang<i/19*19+19)  {
+                int vthang = i/cell*cell, diem = 0;
+                while (vthang<i/cell*cell+cell)  {
                     if (arr.get(vthang)==i1) diem = diem+i1;
                     else diem=0;
                     if (diem==5*i1) {
-                        if (vthang % 19 == 18 || vthang % 19 == 4) return i1;
+                        if (vthang % cell == (cell-1) || vthang % cell == 4) return i1;
                         if (arr.get(vthang + 1) != -i1 || arr.get(vthang - 5) != -i1) return i1;
                     }
-
                     vthang++;
                 }
                 return 0;
-
             }
             private int ktcot(int i, int i1){
-                int vtcot = i%19, diem = 0;
-                while (vtcot<19*19) {
+                int vtcot = i%cell, diem = 0;
+                while (vtcot<cell*cell) {
                     if (arr.get(vtcot)==i1) diem = diem+i1;
                     else diem =0;
                     if (diem==5*i1){
-                        if (vtcot/19==18 || vtcot/19==4) return i1;
-                        if (arr.get(vtcot+19)!=-i1 || arr.get(vtcot-19*5)!=-i1) return i1;
+                        if (vtcot/cell==(cell-1) || vtcot/cell==4) return i1;
+                        if (arr.get(vtcot+cell)!=-i1 || arr.get(vtcot-cell*5)!=-i1) return i1;
                     }
-
-                    vtcot=vtcot+19;
+                    vtcot=vtcot+cell;
                 }
                 return 0;
-
             }
             private int ktcheo1(int i, int i1){
                 int vtcheo1=i, diem = 0;
-                while (vtcheo1%19!=0 && vtcheo1/19!=0) vtcheo1=vtcheo1-20;
+                while (vtcheo1%cell!=0 && vtcheo1/cell!=0) vtcheo1=vtcheo1-(cell+1);
                 do {
                     if (arr.get(vtcheo1)==i1) diem = diem + i1;
                     else diem = 0;
                     if (diem==5*i1) {
-                        if (vtcheo1%19==18 || vtcheo1/19==18 || vtcheo1/19==4 || vtcheo1%19==4) return i1;
-                        if (arr.get(vtcheo1+20)!=-i1 || arr.get(vtcheo1-20*5)!=-i1) return i1;
+                        if (vtcheo1%cell==(cell-1) || vtcheo1/cell==(cell-1) || vtcheo1/cell==4 || vtcheo1%cell==4) return i1;
+                        if (arr.get(vtcheo1+(cell+1))!=-i1 || arr.get(vtcheo1-(cell+1)*5)!=-i1) return i1;
                     }
-                    vtcheo1=vtcheo1+20;
-                } while (vtcheo1%19!=0 && vtcheo1/19!=19);
+                    vtcheo1=vtcheo1+(cell+1);
+                } while (vtcheo1%cell!=0 && vtcheo1/cell!=cell);
                 return 0;
-
             }
             private int ktcheo2(int i, int i1){
                 int vtcheo2=i, diem =0;
-                while (vtcheo2%19!=18 && vtcheo2/19!=0) vtcheo2=vtcheo2-18;
+                while (vtcheo2%cell!=(cell-1) && vtcheo2/cell!=0) vtcheo2=vtcheo2-(cell-1);
                 do {
                     if (arr.get(vtcheo2)==i1) diem = diem + i1;
                     else diem =0;
                     if (diem == 5*i1){
-                        if (vtcheo2%19==0 || vtcheo2/19==18 || vtcheo2/19==3 || vtcheo2%19==14) return i1;
-                        if (arr.get(vtcheo2+18)!=-i1 || arr.get(vtcheo2-18*5)!=-i1) return i1;
+                        if (vtcheo2%cell==0 || vtcheo2/cell==(cell-1) || vtcheo2/cell==3 || vtcheo2%cell==14) return i1;
+                        if (arr.get(vtcheo2+(cell-1))!=-i1 || arr.get(vtcheo2-(cell-1)*5)!=-i1) return i1;
                     }
-                    vtcheo2=vtcheo2+18;
+                    vtcheo2=vtcheo2+(cell-1);
 
-                }  while (vtcheo2%19!=18 && vtcheo2/19!=19);
+                }  while (vtcheo2%cell!=(cell-1) && vtcheo2/cell!=cell);
                 return 0;
             }
-
         });
         return view;
     }
@@ -229,7 +222,7 @@ public class AdapterGridViewPvsP extends BaseAdapter{
         rep.add(-2);
         pwin.setTextColor(Color.parseColor("#FFFF0004"));
         btNewGame.setEnabled(true);
-        for (int j=0; j<19*19; j++)
+        for (int j=0; j<cell*cell; j++)
             if (arr.get(j)==0) arr.set(j, 7);
     }
     private void o_win(){
@@ -239,7 +232,7 @@ public class AdapterGridViewPvsP extends BaseAdapter{
         pwin.setTextColor(Color.parseColor("#FF0B00E2"));
         rep.add(-1);
         btNewGame.setEnabled(true);
-        for (int j=0; j<19*19; j++)
+        for (int j=0; j<cell*cell; j++)
             if (arr.get(j)==0) arr.set(j, 7);
     }
     private void timer_start(){

@@ -28,10 +28,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-/**
- * Created by Administrator on 3/3/2018.
- */
-
 public class PvsPActivity extends AppCompatActivity {
     GridView grid;
     AdapterGridViewPvsP adapter;
@@ -44,6 +40,7 @@ public class PvsPActivity extends AppCompatActivity {
     ConstraintLayout.LayoutParams layoutParams;
     ImageView px, po;
     int pvsp_time, vitri;
+    int cell = 19;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,7 +59,7 @@ public class PvsPActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                     }
                     if (rep.size()>1 && rep.get(rep.size()-1)<0) {
-                        for (int i=0; i<19*19; i++)
+                        for (int i=0; i<cell*cell; i++)
                             if (list.get(i)==7) list.set(i, 0);
                         rep.remove(rep.size()-1);
                         list.set(rep.get(rep.size()-1), 0);
@@ -92,22 +89,22 @@ public class PvsPActivity extends AppCompatActivity {
                 break;
             case R.id.time_15s:
                 pvsp_time = 1;
-                Toast.makeText(this, "15s", 0).show();
+                Toast.makeText(this, "Set time 15s", Toast.LENGTH_SHORT).show();
                 st_times = "Times: 15s     ";
                 break;
             case R.id.time_30s:
                 pvsp_time = 2;
-                Toast.makeText(this, "30s", 0).show();
+                Toast.makeText(this, "Set time 30s", Toast.LENGTH_SHORT).show();
                 st_times = "Times: 30s     ";
                 break;
             case R.id.time_60s:
                 pvsp_time = 3;
-                Toast.makeText(this, "60s", 0).show();
+                Toast.makeText(this, "Set time 60s", Toast.LENGTH_SHORT).show();
                 st_times = "Times: 60s     ";
                 break;
             case R.id.time_infinity:
                 pvsp_time = 0;
-                Toast.makeText(this, "Infinity", 0).show();
+                Toast.makeText(this, "Set time Infinity", Toast.LENGTH_SHORT).show();
                 st_times = "Times: Infinity";
                 break;
         }
@@ -170,7 +167,7 @@ public class PvsPActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     list.clear();
-                    for (int i=0; i<19*19; i++) list.add(0);
+                    for (int i=0; i<cell*cell; i++) list.add(0);
                     for (int i=0; i<rep.size(); i++)
                         if (i%2==0) list.set(rep.get(i), 1);
                         else list.set(rep.get(i), -1);
@@ -227,9 +224,9 @@ public class PvsPActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 px.setImageResource(R.drawable.px);
-                po.setImageResource(R.drawable.poo);
+                po.setImageResource(R.drawable.po);
                 list.clear(); rep.clear(); red.clear();
-                for (int i=0; i<19*19; i++) list.add(0);
+                for (int i=0; i<cell*cell; i++) list.add(0);
                 list.set(180, 1);
                 rep.add(180);
                 pwin.setText("");
@@ -245,7 +242,7 @@ public class PvsPActivity extends AppCompatActivity {
 
     private void khoitaobanco() {
         list = new ArrayList<>();
-        for (int i=0; i<19*19; i++) list.add(7);
+        for (int i=0; i<cell*cell; i++) list.add(7);
         rep = new ArrayList<>();
         red = new ArrayList<>();
         st_times="Times: Infinity";
@@ -299,7 +296,7 @@ public class PvsPActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(PvsPActivity.this, "Saved", 0).show();
+                            Toast.makeText(PvsPActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     }
 

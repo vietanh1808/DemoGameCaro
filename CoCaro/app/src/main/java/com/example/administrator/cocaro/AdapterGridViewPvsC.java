@@ -12,16 +12,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Created by Administrator on 3/12/2018.
- */
-
 public class AdapterGridViewPvsC extends BaseAdapter {
     Context myContext;
     int myLayout;
     ArrayList<Integer> arr, rep, red, ATK, DEF, heuristic, random;
     Button btNewGame;
     int kt=0;
+    int cell = 19;
+    
     public AdapterGridViewPvsC(Context myContext, int myLayout, ArrayList<Integer> arr, ArrayList<Integer> rep,
                                ArrayList<Integer> red, Button btNewgame) {
         this.myContext = myContext;
@@ -90,11 +88,11 @@ public class AdapterGridViewPvsC extends BaseAdapter {
             }
 
             private boolean ktxq(int vt) {
-                int hang=vt/19;
-                int cot=vt%19;
+                int hang=vt/cell;
+                int cot=vt%cell;
                 for (int x=hang-1; x<=hang+1; x++)
                     for (int y=cot-1; y<=cot+1; y++)
-                        if (x>=0 && x<=18 && y>=0 && y<=18 && arr.get(x*19+y)!=0 && x*19+y!=vt) return true;
+                        if (x>=0 && x<=(cell-1) && y>=0 && y<=(cell-1) && arr.get(x*cell+y)!=0 && x*cell+y!=vt) return true;
                 return false;
             }
 
@@ -102,7 +100,7 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                 if (depth==4) return 0;
                 if (isCom) {
                     int v = -1000000000;
-                    for (int vt=rep.get(rep.size()-1); vt<19*19; vt++)
+                    for (int vt=rep.get(rep.size()-1); vt<cell*cell; vt++)
                         if (arr.get(vt)==0 && ktxq(vt)){
                             arr.set(vt, 1);
                             rep.add(vt);
@@ -138,7 +136,7 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                 }
                 else {
                     int v = 1000000000;
-                    for (int vt=rep.get(rep.size()-1); vt<19*19; vt++)
+                    for (int vt=rep.get(rep.size()-1); vt<cell*cell; vt++)
                         if (arr.get(vt)==0 && ktxq(vt)) {
                             arr.set(vt, -1);
                             rep.add(vt);
@@ -176,12 +174,12 @@ public class AdapterGridViewPvsC extends BaseAdapter {
 
             private int vt_x_danh() {
                 heuristic.clear(); random.clear();
-                for (int vt=0; vt<19*19; vt++)
+                for (int vt=0; vt<cell*cell; vt++)
                     if (arr.get(vt)!=0) heuristic.add(0);
                     else heuristic.add(
                             Math.max(xTC_cheo1(vt)+xTC_cheo2(vt)+xTC_doc(vt)+xTC_ngang(vt),
                                     xPT_cheo1(vt)+xPT_cheo2(vt)+xPT_doc(vt)+xPT_ngang(vt)));
-                for (int vt=rep.get(rep.size()-1); vt<19*19; vt++)
+                for (int vt=rep.get(rep.size()-1); vt<cell*cell; vt++)
                     if (arr.get(vt)==0 && ktxq(vt)) {
                         arr.set(vt, 1);
                         rep.add(vt);
@@ -214,9 +212,9 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                     }
 
                 int max=0;
-                for (int vt=0; vt<19*19; vt++)
+                for (int vt=0; vt<cell*cell; vt++)
                     if (heuristic.get(vt)>heuristic.get(max)) max=vt;
-                for (int vt=0; vt<19*19; vt++)
+                for (int vt=0; vt<cell*cell; vt++)
                     if (heuristic.get(vt)==heuristic.get(max)) random.add(vt);
                 Random rd = new Random();
                 return random.get(rd.nextInt(random.size()));
@@ -224,8 +222,8 @@ public class AdapterGridViewPvsC extends BaseAdapter {
 
             private int xTC_cheo2(int vt) {
                 int sox=0, soo=0, sono=0, sonx=0;
-                for (int dem=vt; dem<vt+6*18; dem=dem+18) {
-                    if (vt/19==18 || vt%19==0) break;
+                for (int dem=vt; dem<vt+6*(cell-1); dem=dem+(cell-1)) {
+                    if (vt/cell==(cell-1) || vt%cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==1) sox++;
                     else if (arr.get(dem)==-1) {
@@ -233,14 +231,14 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=18 && dem%19!=0 && arr.get(dem+18)==-1) sono++;
-                        if (dem/19!=18 && dem%19!=0 && arr.get(dem+18)==1) sonx++;
+                        if (dem/cell!=(cell-1) && dem%cell!=0 && arr.get(dem+(cell-1))==-1) sono++;
+                        if (dem/cell!=(cell-1) && dem%cell!=0 && arr.get(dem+(cell-1))==1) sonx++;
                         break;
                     }
-                    if (dem/19==18 || dem%19==0) break;
+                    if (dem/cell==(cell-1) || dem%cell==0) break;
                 }
-                for (int dem=vt; dem>vt-6*18; dem=dem-18) {
-                    if (vt/19==0 || vt%19==18) break;
+                for (int dem=vt; dem>vt-6*(cell-1); dem=dem-(cell-1)) {
+                    if (vt/cell==0 || vt%cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)== 1) sox++;
                     else if (arr.get(dem)==-1) {
@@ -248,11 +246,11 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=0 && dem/19!=18 && arr.get(dem-18)==-1) sono++;
-                        if (dem/19!=0 && dem/19!=18 && arr.get(dem-18)==1) sonx++;
+                        if (dem/cell!=0 && dem/cell!=(cell-1) && arr.get(dem-(cell-1))==-1) sono++;
+                        if (dem/cell!=0 && dem/cell!=(cell-1) && arr.get(dem-(cell-1))==1) sonx++;
                         break;
                     }
-                    if (dem/19==0 || dem%19==18) break;
+                    if (dem/cell==0 || dem%cell==(cell-1)) break;
                 }
                 if (soo==2 && sox<5) return 0;
                 if (sono==1 && soo==1 && sox<4) return 0;
@@ -261,8 +259,8 @@ public class AdapterGridViewPvsC extends BaseAdapter {
             }
             private int xTC_cheo1(int vt) {
                 int sox=0, soo=0, sono=0, sonx=0;
-                for (int dem=vt; dem<vt+6*20; dem=dem+20) {
-                    if (vt/19==18 || vt%19==18) break;
+                for (int dem=vt; dem<vt+6*(cell+1); dem=dem+(cell+1)) {
+                    if (vt/cell==(cell-1) || vt%cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==1) sox++;
                     else if (arr.get(dem)==-1) {
@@ -270,14 +268,14 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=18 && dem%19!=18 && arr.get(dem+20)==-1) sono++;
-                        if (dem/19!=18 && dem%19!=18 && arr.get(dem+20)==1) sonx++;
+                        if (dem/cell!=(cell-1) && dem%cell!=(cell-1) && arr.get(dem+(cell+1))==-1) sono++;
+                        if (dem/cell!=(cell-1) && dem%cell!=(cell-1) && arr.get(dem+(cell+1))==1) sonx++;
                         break;
                     }
-                    if (dem/19==18 || dem%19==18) break;
+                    if (dem/cell==(cell-1) || dem%cell==(cell-1)) break;
                 }
-                for (int dem=vt; dem>vt-6*20; dem=dem-20) {
-                    if (vt/19==0 || vt%19==0) break;
+                for (int dem=vt; dem>vt-6*(cell+1); dem=dem-(cell+1)) {
+                    if (vt/cell==0 || vt%cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==1) sox++;
                     else if (arr.get(dem)==-1) {
@@ -285,11 +283,11 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=0 && dem%19!=0 && arr.get(dem-20)==-1) sono++;
-                        if (dem/19!=0 && dem%19!=0 && arr.get(dem-20)==1) sonx++;
+                        if (dem/cell!=0 && dem%cell!=0 && arr.get(dem-(cell+1))==-1) sono++;
+                        if (dem/cell!=0 && dem%cell!=0 && arr.get(dem-(cell+1))==1) sonx++;
                         break;
                     }
-                    if (dem/19==0 || dem%19==0) break;
+                    if (dem/cell==0 || dem%cell==0) break;
                 }
                 if (soo==2 && sox<5) return 0;
                 if (sono==1 && soo==1 && sox<4) return 0;
@@ -298,8 +296,8 @@ public class AdapterGridViewPvsC extends BaseAdapter {
             }
             private int xTC_doc(int vt) {
                 int sox=0, soo=0, sono=0, sonx=0;
-                for (int dem=vt; dem<vt+6*19; dem=dem+19) {
-                    if (vt/19==18) break;
+                for (int dem=vt; dem<vt+6*cell; dem=dem+cell) {
+                    if (vt/cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==1) sox++;
                     else if (arr.get(dem)==-1) {
@@ -307,14 +305,14 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=18 && arr.get(dem+19)==-1) sono++;
-                        if (dem/19!=18 && arr.get(dem+19)==1) sonx++;
+                        if (dem/cell!=(cell-1) && arr.get(dem+cell)==-1) sono++;
+                        if (dem/cell!=(cell-1) && arr.get(dem+cell)==1) sonx++;
                         break;
                     }
-                    if (dem/19==18) break;
+                    if (dem/cell==(cell-1)) break;
                 }
-                for (int dem=vt; dem>vt-6*19; dem=dem-19) {
-                    if (vt/19==0) break;
+                for (int dem=vt; dem>vt-6*cell; dem=dem-cell) {
+                    if (vt/cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==1) sox++;
                     else if (arr.get(dem)==-1) {
@@ -322,11 +320,11 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=0 && arr.get(dem-19)==-1) sono++;
-                        if (dem/19!=0 && arr.get(dem-19)==1) sonx++;
+                        if (dem/cell!=0 && arr.get(dem-cell)==-1) sono++;
+                        if (dem/cell!=0 && arr.get(dem-cell)==1) sonx++;
                         break;
                     }
-                    if (dem/19==0) break;
+                    if (dem/cell==0) break;
                 }
                 if (soo==2 && sox<5) return 0;
                 if (sono==1 && soo==1 && sox<4) return 0;
@@ -336,32 +334,32 @@ public class AdapterGridViewPvsC extends BaseAdapter {
             private int xTC_ngang(int vt) {
                 int sox=0, soo=0, sono=0, sonx=0;
                 for (int dem=vt; dem<vt+6; dem++) {
-                    if (vt%19==18) break;
+                    if (vt%cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==1) sox++;
                     else if (arr.get(dem)==-1) {
                         soo++;
                         break;
                     } else {
-                        if (dem%19!=18 && arr.get(dem+1)==-1) sono++;
-                        if (dem%19!=18 && arr.get(dem+1)==1) sonx++;
+                        if (dem%cell!=(cell-1) && arr.get(dem+1)==-1) sono++;
+                        if (dem%cell!=(cell-1) && arr.get(dem+1)==1) sonx++;
                         break;
                     }
-                    if (dem%19==18) break;
+                    if (dem%cell==(cell-1)) break;
                 }
                 for (int dem=vt; dem>vt-6; dem--) {
-                    if (vt%19==0) break;
+                    if (vt%cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==1) sox++;
                     else if (arr.get(dem)==-1) {
                         soo++;
                         break;
                     } else {
-                        if (dem%19!=0 && arr.get(dem-1)==-1) sono++;
-                        if (dem%19!=0 && arr.get(dem-1)==1) sonx++;
+                        if (dem%cell!=0 && arr.get(dem-1)==-1) sono++;
+                        if (dem%cell!=0 && arr.get(dem-1)==1) sonx++;
                         break;
                     }
-                    if (dem%19==0) break;
+                    if (dem%cell==0) break;
                 }
                 if (soo==2 && sox<5) return 0;
                 if (sono==1 && soo==1 && sox<4) return 0;
@@ -370,8 +368,8 @@ public class AdapterGridViewPvsC extends BaseAdapter {
 
             private int xPT_cheo2(int vt) {
                 int sox=0, soo=0, sonx=0, sono=0;
-                for (int dem=vt; dem<vt+6*18; dem=dem+18) {
-                    if (vt/19==18 || vt%19==0) break;
+                for (int dem=vt; dem<vt+6*(cell-1); dem=dem+(cell-1)) {
+                    if (vt/cell==(cell-1) || vt%cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
@@ -379,14 +377,14 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=18 && dem%19!=0 && arr.get(dem+18)==1) sonx++;
-                        if (dem/19!=18 && dem%19!=0 && arr.get(dem+18)==-1) sono++;
+                        if (dem/cell!=(cell-1) && dem%cell!=0 && arr.get(dem+(cell-1))==1) sonx++;
+                        if (dem/cell!=(cell-1) && dem%cell!=0 && arr.get(dem+(cell-1))==-1) sono++;
                         break;
                     }
-                    if (dem/19==18 || dem%19==0) break;
+                    if (dem/cell==(cell-1) || dem%cell==0) break;
                 }
-                for (int dem=vt; dem>vt-6*18; dem=dem-18) {
-                    if (vt/19==0 || vt%19==18) break;
+                for (int dem=vt; dem>vt-6*(cell-1); dem=dem-(cell-1)) {
+                    if (vt/cell==0 || vt%cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
@@ -394,11 +392,11 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=0 && dem/19!=18 && arr.get(dem-18)==1) sonx++;
-                        if (dem/19!=0 && dem/19!=18 && arr.get(dem-18)==-1) sono++;
+                        if (dem/cell!=0 && dem/cell!=(cell-1) && arr.get(dem-(cell-1))==1) sonx++;
+                        if (dem/cell!=0 && dem/cell!=(cell-1) && arr.get(dem-(cell-1))==-1) sono++;
                         break;
                     }
-                    if (dem/19==0 || dem%19==18) break;
+                    if (dem/cell==0 || dem%cell==(cell-1)) break;
                 }
                 if (sox==2 && soo<5) return 0;
                 if (sonx==1 && sox==1 && soo<4) return 0;
@@ -407,8 +405,8 @@ public class AdapterGridViewPvsC extends BaseAdapter {
             }
             private int xPT_cheo1(int vt) {
                 int sox=0, soo=0, sonx=0, sono=0;
-                for (int dem=vt; dem<vt+6*20; dem=dem+20) {
-                    if (vt/19==18 || vt%19==18) break;
+                for (int dem=vt; dem<vt+6*(cell+1); dem=dem+(cell+1)) {
+                    if (vt/cell==(cell-1) || vt%cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
@@ -416,14 +414,14 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=18 && dem%19!=18 && arr.get(dem+20)==1) sonx++;
-                        if (dem/19!=18 && dem%19!=18 && arr.get(dem+20)==-1) sono++;
+                        if (dem/cell!=(cell-1) && dem%cell!=(cell-1) && arr.get(dem+(cell+1))==1) sonx++;
+                        if (dem/cell!=(cell-1) && dem%cell!=(cell-1) && arr.get(dem+(cell+1))==-1) sono++;
                         break;
                     }
-                    if (dem/19==18 || dem%19==18) break;
+                    if (dem/cell==(cell-1) || dem%cell==(cell-1)) break;
                 }
-                for (int dem=vt; dem>vt-6*20; dem=dem-20) {
-                    if (vt/19==0 || vt%19==0) break;
+                for (int dem=vt; dem>vt-6*(cell+1); dem=dem-(cell+1)) {
+                    if (vt/cell==0 || vt%cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
@@ -431,11 +429,11 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=0 && dem%19!=0 && arr.get(dem-20)==1) sonx++;
-                        if (dem/19!=0 && dem%19!=0 && arr.get(dem-20)==-1) sono++;
+                        if (dem/cell!=0 && dem%cell!=0 && arr.get(dem-(cell+1))==1) sonx++;
+                        if (dem/cell!=0 && dem%cell!=0 && arr.get(dem-(cell+1))==-1) sono++;
                         break;
                     }
-                    if (dem/19==0 || dem%19==0) break;
+                    if (dem/cell==0 || dem%cell==0) break;
                 }
                 if (sox==2 && soo<5) return 0;
                 if (sonx==1 && sox==1 && soo<4) return 0;
@@ -444,8 +442,8 @@ public class AdapterGridViewPvsC extends BaseAdapter {
             }
             private int xPT_doc(int vt) {
                 int sox=0, soo=0, sonx=0, sono=0;
-                for (int dem=vt; dem<vt+6*19; dem=dem+19) {
-                    if (vt/19==18) break;
+                for (int dem=vt; dem<vt+6*cell; dem=dem+cell) {
+                    if (vt/cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
@@ -453,14 +451,14 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=18 && arr.get(dem+19)==1) sonx++;
-                        if (dem/19!=18 && arr.get(dem+19)==-1) sono++;
+                        if (dem/cell!=(cell-1) && arr.get(dem+cell)==1) sonx++;
+                        if (dem/cell!=(cell-1) && arr.get(dem+cell)==-1) sono++;
                         break;
                     }
-                    if (dem/19==18) break;
+                    if (dem/cell==(cell-1)) break;
                 }
-                for (int dem=vt; dem>vt-6*19; dem=dem-19) {
-                    if (vt/19==0) break;
+                for (int dem=vt; dem>vt-6*cell; dem=dem-cell) {
+                    if (vt/cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
@@ -468,11 +466,11 @@ public class AdapterGridViewPvsC extends BaseAdapter {
                         break;
                     }
                     else {
-                        if (dem/19!=0 && arr.get(dem-19)==1) sonx++;
-                        if (dem/19!=0 && arr.get(dem-19)==-1) sono++;
+                        if (dem/cell!=0 && arr.get(dem-cell)==1) sonx++;
+                        if (dem/cell!=0 && arr.get(dem-cell)==-1) sono++;
                         break;
                     }
-                    if (dem/19==0) break;
+                    if (dem/cell==0) break;
                 }
                 if (sox==2 && soo<5) return 0;
                 if (sonx==1 && sox==1 && soo<4) return 0;
@@ -482,32 +480,32 @@ public class AdapterGridViewPvsC extends BaseAdapter {
             private int xPT_ngang(int vt) {
                 int sox=0, soo=0, sonx=0, sono=0;
                 for (int dem=vt; dem<vt+6; dem++) {
-                    if (vt%19==18) break;
+                    if (vt%cell==(cell-1)) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
                         sox++;
                         break;
                     } else {
-                        if (dem%19!=18 && arr.get(dem+1)==1) sonx++;
-                        if (dem%19!=18 && arr.get(dem+1)==-1) sono++;
+                        if (dem%cell!=(cell-1) && arr.get(dem+1)==1) sonx++;
+                        if (dem%cell!=(cell-1) && arr.get(dem+1)==-1) sono++;
                         break;
                     }
-                    if (dem%19==18) break;
+                    if (dem%cell==(cell-1)) break;
                 }
                 for (int dem=vt; dem>vt-6; dem--) {
-                    if (vt%19==0) break;
+                    if (vt%cell==0) break;
                     if (dem==vt) continue;
                     if (arr.get(dem)==-1) soo++;
                     else if (arr.get(dem)==1) {
                         sox++;
                         break;
                     } else {
-                        if (dem%19!=0 && arr.get(dem-1)==1) sonx++;
-                        if (dem%19!=0 && arr.get(dem-1)==-1) sono++;
+                        if (dem%cell!=0 && arr.get(dem-1)==1) sonx++;
+                        if (dem%cell!=0 && arr.get(dem-1)==-1) sono++;
                         break;
                     }
-                    if (dem%19==0) break;
+                    if (dem%cell==0) break;
                 }
                 if (sox==2 && soo<5) return 0;
                 if (sonx==1 && sox==1 && soo<4) return 0;
@@ -516,26 +514,26 @@ public class AdapterGridViewPvsC extends BaseAdapter {
 
             private void x_win() {
                 rep.add(-2);
-                Toast.makeText(myContext, "X win", 1).show();
+                Toast.makeText(myContext, "X win", Toast.LENGTH_SHORT).show();
                 btNewGame.setEnabled(true);
-                for (int j=0; j<19*19; j++)
+                for (int j=0; j<cell*cell; j++)
                     if (arr.get(j)==0) arr.set(j, 7);
             }
             private void o_win(){
                 rep.add(-1);
-                Toast.makeText(myContext, "O win", 1).show();
+                Toast.makeText(myContext, "O win", Toast.LENGTH_SHORT).show();
                 btNewGame.setEnabled(true);
-                for (int j=0; j<19*19; j++)
+                for (int j=0; j<cell*cell; j++)
                     if (arr.get(j)==0) arr.set(j, 7);
                 notifyDataSetChanged();
             }
             private int kthang(int i, int i1) {
-                int vthang = i/19*19, diem = 0;
-                while (vthang<i/19*19+19)  {
+                int vthang = i/cell*cell, diem = 0;
+                while (vthang<i/cell*cell+cell)  {
                     if (arr.get(vthang)==i1) diem = diem+i1;
                     else diem=0;
                     if (diem==5*i1) {
-                        if (vthang % 19 == 18 || vthang % 19 == 4) return i1;
+                        if (vthang % cell == (cell-1) || vthang % cell == 4) return i1;
                         if (arr.get(vthang + 1) != -i1 || arr.get(vthang - 5) != -i1) return i1;
                     }
 
@@ -545,51 +543,50 @@ public class AdapterGridViewPvsC extends BaseAdapter {
 
             }
             private int ktcot(int i, int i1){
-                int vtcot = i%19, diem = 0;
-                while (vtcot<19*19) {
+                int vtcot = i%cell, diem = 0;
+                while (vtcot<cell*cell) {
                     if (arr.get(vtcot)==i1) diem = diem+i1;
                     else diem =0;
                     if (diem==5*i1){
-                        if (vtcot/19==18 || vtcot/19==4) return i1;
-                        if (arr.get(vtcot+19)!=-i1 || arr.get(vtcot-19*5)!=-i1) return i1;
+                        if (vtcot/cell==(cell-1) || vtcot/cell==4) return i1;
+                        if (arr.get(vtcot+cell)!=-i1 || arr.get(vtcot-cell*5)!=-i1) return i1;
                     }
 
-                    vtcot=vtcot+19;
+                    vtcot=vtcot+cell;
                 }
                 return 0;
 
             }
             private int ktcheo1(int i, int i1){
                 int vtcheo1=i, diem = 0;
-                while (vtcheo1%19!=0 && vtcheo1/19!=0) vtcheo1=vtcheo1-20;
+                while (vtcheo1%cell!=0 && vtcheo1/cell!=0) vtcheo1=vtcheo1-(cell+1);
                 do {
                     if (arr.get(vtcheo1)==i1) diem = diem + i1;
                     else diem = 0;
                     if (diem==5*i1) {
-                        if (vtcheo1%19==18 || vtcheo1/19==18 || vtcheo1/19==4 || vtcheo1%19==4) return i1;
-                        if (arr.get(vtcheo1+20)!=-i1 || arr.get(vtcheo1-20*5)!=-i1) return i1;
+                        if (vtcheo1%cell==(cell-1) || vtcheo1/cell==(cell-1) || vtcheo1/cell==4 || vtcheo1%cell==4) return i1;
+                        if (arr.get(vtcheo1+(cell+1))!=-i1 || arr.get(vtcheo1-(cell+1)*5)!=-i1) return i1;
                     }
-                    vtcheo1=vtcheo1+20;
-                } while (vtcheo1%19!=0 && vtcheo1/19!=19);
+                    vtcheo1=vtcheo1+(cell+1);
+                } while (vtcheo1%cell!=0 && vtcheo1/cell!=cell);
                 return 0;
 
             }
             private int ktcheo2(int i, int i1){
                 int vtcheo2=i, diem =0;
-                while (vtcheo2%19!=18 && vtcheo2/19!=0) vtcheo2=vtcheo2-18;
+                while (vtcheo2%cell!=(cell-1) && vtcheo2/cell!=0) vtcheo2=vtcheo2-(cell-1);
                 do {
                     if (arr.get(vtcheo2)==i1) diem = diem + i1;
                     else diem =0;
                     if (diem == 5*i1){
-                        if (vtcheo2%19==0 || vtcheo2/19==18 || vtcheo2/19==3 || vtcheo2%19==14) return i1;
-                        if (arr.get(vtcheo2+18)!=-i1 || arr.get(vtcheo2-18*5)!=-i1) return i1;
+                        if (vtcheo2%cell==0 || vtcheo2/cell==(cell-1) || vtcheo2/cell==3 || vtcheo2%cell==14) return i1;
+                        if (arr.get(vtcheo2+(cell-1))!=-i1 || arr.get(vtcheo2-(cell-1)*5)!=-i1) return i1;
                     }
-                    vtcheo2=vtcheo2+18;
+                    vtcheo2=vtcheo2+(cell-1);
 
-                }  while (vtcheo2%19!=18 && vtcheo2/19!=19);
+                }  while (vtcheo2%cell!=(cell-1) && vtcheo2/cell!=cell);
                 return 0;
             }
-
         });
 
         return view;

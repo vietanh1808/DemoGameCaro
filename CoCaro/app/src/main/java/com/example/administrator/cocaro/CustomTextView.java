@@ -3,13 +3,9 @@ package com.example.administrator.cocaro;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.TextView;
-
-/**
- * Created by Administrator on 3/12/2018.
- */
-
-public class CustomTextView extends TextView{
+public class CustomTextView extends View {
 
     public CustomTextView(Context context) {
         super(context);
